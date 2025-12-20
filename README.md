@@ -270,5 +270,5 @@ Thank you for considering contributing to FastIO! Here are some guidelines.
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/deotermia/fastio.git
-cd fastio
+git clone https://github.com/deotermia/fastio-lib.git
+cd fastio-lib
