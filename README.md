@@ -76,16 +76,59 @@ int main() {
 ```
 
 ## 📚 API Reference
-### 📚 API Reference: Output Functions
 
-| Function | Description | Example Output |
+### Output Functions
+| Function | Description | Example | Output |
+| :--- | :--- | :--- | :--- |
+| `print(args...)` | No spaces | `print(42, "test")` | `42test` |
+| `println(args...)` | No spaces + newline | `println(42, "test")` | `42test\n` |
+| `print_spaced(args...)` | With spaces | `print_spaced(42, "test")` | `42 test` |
+| `println_spaced(args...)` | Spaces + newline | `println_spaced(42, "test")` | `42 test\n` |
+| `print_fmt(fmt, args...)` | Formatted | `print_fmt("{}", 42)` | `42` |
+| `println_fmt(fmt, args...)` | Formatted + newline | `println_fmt("{}", 42)` | `42\n` |
+| `fprint(stream, args...)` | To stream (no spaces) | `fprint(file, 42, "test")` | `42test` |
+| `fprintln(stream, args...)` | To stream + newline | `fprintln(file, 42, "test")` | `42test\n` |
+| `fprint_spaced(stream, args...)` | To stream with spaces | `fprint_spaced(file, 42, "test")` | `42 test` |
+| `fprintln_spaced(stream, args...)` | To stream spaces + newline | `fprintln_spaced(file, 42, "test")` | `42 test\n` |
+| `fprint_fmt(stream, fmt, args...)` | Formatted to stream | `fprint_fmt(file, "{}", 42)` | `42` |
+| `fprintln_fmt(stream, fmt, args...)` | Formatted to stream + newline | `fprintln_fmt(file, "{}", 42)` | `42\n` |
+
+### Input Functions  
+| Function | Description | Example |
 | :--- | :--- | :--- |
-| `print(args...)` | No spaces | `42test` |
-| `println(args...)` | No spaces + newline | `42test\n` |
-| `print_spaced(args...)` | With spaces | `42 test` |
-| `println_spaced(args...)` | Spaces + newline | `42 test\n` |
-| `print_fmt("{}", arg)` | Formatted output | `value: 42` |
-| `println_fmt("{}", arg)` | Formatted + newline | `value: 42\n` |
+| `input(var)` | Read from stdin | `input(x)` |
+| `input(var1, var2, ...)` | Read multiple | `input(a, b, c)` |
+| `finput(stream, var)` | Read from stream | `finput(file, x)` |
+| `finput(stream, var1, var2, ...)` | Read multiple from stream | `finput(file, a, b)` |
+| `readline()` | Read line | `auto s = readline()` |
+
+### Formatting & Utilities
+| Function/Class | Description | Example |
+| :--- | :--- | :--- |
+| `format(fmt, args...)` | Format to string | `format("{}", 42)` |
+| `stopwatch` | Timer | `stopwatch sw; auto t = sw.elapsed();` |
+| `parse_int<T>(str)` | Parse integer | `parse_int<int>("123")` |
+| `write_int(buffer, value)` | Write int to buffer | `write_int(buf, 42)` |
+
+### Input Functions
+
+```cpp
+// Read single value
+int x;
+fastio::input(x);
+
+// Read multiple values
+int a, b;
+std::string name;
+double value;
+fastio::input(a, b, name, value);
+
+// Read from any stream
+std::ifstream file("data.txt");
+fastio::finput(file, var1, var2, var3);
+
+// Read entire line
+std::string line = fastio::readline();
 
 ### Utility Functions
 ```cpp
