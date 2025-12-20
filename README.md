@@ -10,13 +10,30 @@ The main goal of FastIO is simple: **maximum performance with minimal generated 
 
 ---
 
-## 📊 Benchmark Results
+## ⚖️ Comparison with std::format
 
-| Operation | FastIO | std::format | Improvement |
-|----------|--------|-------------|-------------|
-| Format 100k strings | 9 ms | ~15 ms | ~40% faster |
-| Code size | ~1.5K lines | ~6K lines | ~75% smaller |
-| Binary size | ~50 KB | ~150 KB | ~66% smaller |
+| Feature | FastIO | std::format |
+| :--- | :--- | :--- |
+| **Compile-time validation** | ✅ Yes | ✅ Yes |
+| **Code size** | ~1.5K lines | ~6K lines |
+| **Performance** | ~40% faster | Baseline |
+| **Header-only** | ✅ Yes | ❌ No |
+| **Basic format specifiers** | ✅ `{}` only | ✅ Full |
+| **Width/alignment** | ❌ Not yet | ✅ Yes |
+| **Locale support** | ❌ No | ✅ Yes |
+| **Type extensibility** | ✅ Easy | ✅ Complex |
+
+### When to use FastIO
+- Need **maximum performance** with simple formatting
+- Working in **resource-constrained environments**
+- Want **minimal binary size**
+- Prefer **simple, clean API**
+
+### When to use std::format
+- Need **advanced formatting** (width, precision, alignment)
+- Require **locale support**
+- Need **standard library compatibility**
+- Already using other C++23 features
 
 ---
 
@@ -71,6 +88,12 @@ int main() {
     // ... your code ...
     fastio::println_fmt("Time: {} ms", sw.elapsed().count());
 
+    // Input example
+    int a, b;
+    fastio::print("Enter two numbers: ");
+    fastio::input(a, b);
+    fastio::println_fmt("Sum: {}", a + b);
+
     return 0;
 }
 ```
@@ -110,7 +133,17 @@ int main() {
 | `parse_int<T>(str)` | Parse integer | `parse_int<int>("123")` |
 | `write_int(buffer, value)` | Write int to buffer | `write_int(buf, 42)` |
 
-### Input Functions
+### Type Support
+
+| Type | Print Behavior | Format Behavior | Input Behavior |
+| :--- | :--- | :--- | :--- |
+| Integers (`int`, `long`, ...) | Fast via `std::to_chars` | Fast formatting | Standard `>>` |
+| Floating point (`float`, `double`) | Standard `<<` | Standard formatting | Standard `>>` |
+| `bool` | `"true"`/`"false"` | `"true"`/`"false"` | `1`/`0` |
+| `char` | Single character | Single character | Single character |
+| `std::string` | Full string | Full string | Word (until whitespace) |
+| `const char*` | C-string | C-string | N/A |
+| Custom types | Via `operator<<` | Specialize `format_value_to` | Via `operator>>` |
 
 ```cpp
 // Read single value
@@ -169,7 +202,12 @@ struct Point {
 namespace fastio::internal {
     template<>
     void format_value_to<Point>(format_context& ctx, const Point& p) {
-        format(ctx, "({}, {})", p.x, p.y);
+        // Используем существующий API
+        ctx.append("(");
+        internal::format_value_to(ctx, p.x);
+        ctx.append(", ");
+        internal::format_value_to(ctx, p.y);
+        ctx.append(")");
     }
 }
 
@@ -201,3 +239,36 @@ FastIO::format : 9 ms (100000 iterations)
 std::cout      : 9 ms (100000 iterations)
 snprintf       : 6 ms (100000 iterations)
 ```
+
+## ❓ Why FastIO?
+
+### Problem
+`std::format` and `std::print` in C++23 generate **~6,000 lines of assembly code** for simple formatting operations, causing:
+- **Large binary sizes**
+- **Long compilation times**  
+- **Cache-unfriendly code**
+
+### Solution
+FastIO is designed with **minimal code generation** in mind:
+- **75% less assembly** than `std::format`
+- **Header-only option** for zero linking overhead
+- **Compile-time validation** catches errors early
+- **Modern C++23 features** (concepts, consteval, charconv)
+
+### Use Cases
+- **High-performance logging** where format speed matters
+- **Embedded systems** with limited code space
+- **Game development** requiring minimal overhead
+- **Education** as a simpler alternative to `std::format`
+
+---
+# Contributing to FastIO
+
+Thank you for considering contributing to FastIO! Here are some guidelines.
+
+## Development Setup
+
+1. Clone the repository:
+```bash
+git clone https://github.com/deotermia/fastio.git
+cd fastio
