@@ -87,14 +87,6 @@ int main() {
 | `print_fmt("{}", arg)` | Formatted output | `value: 42` |
 | `println_fmt("{}", arg)` | Formatted + newline | `value: 42\n` |
 
-### Input Functions
-```cpp
-int x, y;
-
-fastio::input(x, y);              // Read from stdin
-fastio::finput(stream, x, y);     // Read from any input stream
-```
-
 ### Utility Functions
 ```cpp
 // String formatting
